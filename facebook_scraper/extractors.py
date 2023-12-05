@@ -1233,6 +1233,9 @@ class PostExtractor:
         if not self.full_post_html:
             logger.error("Unable to get comments without full post HTML")
             return
+        print('FULL_POST_HTML')
+        print(self.full_post_html)
+        
         comments_area_selector = 'div[id^="ufi_"]'
         elem = self.full_post_html.find(comments_area_selector, first=True)
         if not elem:
