@@ -105,7 +105,7 @@ class PostExtractor:
         self._full_post_html = full_post_html
         self._live_data = {}
         self.extra_info = extra_info
-        self.scraper = kwargs['scraper']
+        #self.scraper = kwargs['scraper'] #Temporary commented
 
     # TODO: This is getting ugly, create a dataclass for Post
     def make_new_post(self) -> Post:
