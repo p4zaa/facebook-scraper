@@ -451,10 +451,34 @@ class PostExtractor:
             return None
 
     def extract_user_id(self) -> PartialPost:
+        # Extract user_id in group post
+        html_string = self.element.html
+        match = re.search(r'I(\d+)%3', html_string)
+        
+        if match:
+            # First pattern for https://mbasic.facebook.com/
+            extracted_number = match.group(1)
+            
+        else:
+            # Second pattern for https://m.facebook.com/
+            match = re.search(r'S:_I(\d+):VK', html_string)
+
+            if match:
+                extracted_number = match.group(1)
+            else:
+                print("user_id not found in the HTML string.")
+
+        return {
+            'user_id': extracted_number,
+            'page_id': self.data_ft.get("page_id"),
+        }
+        
+        '''
         return {
             'user_id': self.data_ft['content_owner_id_new'],
             'page_id': self.data_ft.get("page_id"),
         }
+        '''
 
     def extract_image_lq(self) -> PartialPost:
         elems = self.element.find('div.story_body_container>div .img:not(.profpic)')
