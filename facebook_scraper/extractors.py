@@ -95,6 +95,7 @@ class PostExtractor:
 
     # selectors
     post_more_button_selector = 'a:contains("More")[href^="/story.php"]'
+    text_element_selector = 'div[data-ft=\'{"tn":"*s"}\']'
 
     def __init__(self, element, options, request_fn, full_post_html=None, extra_info=None, **kwargs):
         self.element = element
@@ -105,7 +106,7 @@ class PostExtractor:
         self._full_post_html = full_post_html
         self._live_data = {}
         self.extra_info = extra_info
-        #self.scraper = kwargs['scraper'] #Temporary commented
+        self.scraper = kwargs['scraper']
 
     # TODO: This is getting ugly, create a dataclass for Post
     def make_new_post(self) -> Post:
@@ -287,6 +288,7 @@ class PostExtractor:
         # This ensures the full content can be read.
 
         element = self.element
+        text_element_selector = 'div[data-ft=\'{"tn":"*s"}\']'
 
         story_containers = element.find(".story_body_container")
         # on the single post page of mbasic .story_body_container doesn't seem to exist which means no text will be extracted
@@ -381,7 +383,8 @@ class PostExtractor:
                         post_urls = [texts['full_post_url']]
                         post = next(self.scraper.get_posts_by_url(post_urls=post_urls))
                         logger.debug(f"got the text from the full page post")
-                        texts['full_text'] = post['text']
+                        full_text_element = self.full_post_html.find(text_element_selector, first=True)
+                        texts['full_text'] = full_text_element.text #post['text']
 
                 text = paragraph_separator.join(itertools.chain(post_text, shared_text))
                 post_text = paragraph_separator.join(post_text)
