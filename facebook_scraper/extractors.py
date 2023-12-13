@@ -398,7 +398,10 @@ class PostExtractor:
                     texts["translated_text"] += text
                     texts["translated_post_text"] += post_text
                     texts["translated_shared_text"] += shared_text
-
+        
+        full_text_element = self.full_post_html.find(text_element_selector, first=True)
+        texts['text'] = full_text_element.text #post['text']
+        
         if texts:
             if texts["translated_text"]:
                 texts["original_text"] = texts["text"]
